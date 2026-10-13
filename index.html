@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduPilot Student Assistant</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2ff;
+      text-align: center;
+      padding: 30px;
+    }
+    .card {
+      background: white;
+      max-width: 450px;
+      margin: 30px auto;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 3px 15px #ddd;
+    }
+    input, select, button {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    button {
+      background: #6657e8;
+      color: white;
+      cursor: pointer;
+    }
+    h1 { color: #6657e8; }
+  </style>
+</head>
+<body>
+  <h1>EduPilot 🎓</h1>
+  <p>Your Personal Student Assistant</p>
+
+  <div class="card">
+    <h2>Student Details</h2>
+    <form id="studentForm">
+      <input id="name" placeholder="Enter your name" required>
+      <input id="email" type="email" placeholder="Enter email" required>
+
+      <select id="course">
+        <option>Intermediate</option>
+        <option>B.Tech</option>
+      </select>
+
+      <input id="branch" placeholder="Group / Branch" required>
+      <button type="submit">Open Dashboard</button>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    document.getElementById("studentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const course = document.getElementById("course").value;
+      const branch = document.getElementById("branch").value;
+
+      const result = document.getElementById("result");
+      result.replaceChildren();
+
+      const heading = document.createElement("h3");
+      heading.textContent = "Welcome, " + name + "!";
+      const details = document.createElement("p");
+      details.textContent = course + " - " + branch;
+      const message = document.createElement("p");
+      message.textContent = "Your dashboard is ready to build!";
+
+      result.append(heading, details, message);
+    });
+  </script>
+</body>
+</html>
