@@ -2,81 +2,285 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduPilot Student Assistant</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2ff;
-      text-align: center;
-      padding: 30px;
-    }
-    .card {
-      background: white;
-      max-width: 450px;
-      margin: 30px auto;
-      padding: 25px;
-      border-radius: 15px;
-      box-shadow: 0 3px 15px #ddd;
-    }
-    input, select, button {
-      box-sizing: border-box;
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-    }
-    button {
-      background: #6657e8;
-      color: white;
-      cursor: pointer;
-    }
-    h1 { color: #6657e8; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduPilot | Student AI Assistant</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f5fb;color:#242442}
+header{background:#6554e8;color:white;padding:20px 6%;display:flex;justify-content:space-between;align-items:center}
+header h2{margin:0}
+main{max-width:1100px;margin:30px auto;padding:0 16px}
+.card{background:white;padding:22px;border-radius:15px;margin-bottom:20px;box-shadow:0 4px 18px #2020500c}
+h1,h2,h3{margin-top:0}
+input,select,textarea,button{font:inherit;padding:11px;border:1px solid #ddd;border-radius:8px}
+input,select,textarea{width:100%;margin:6px 0 13px}
+button{background:#6554e8;color:white;border:0;cursor:pointer}
+button:hover{background:#5142cb}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.stat{background:#f0edff;padding:16px;border-radius:12px}
+.stat strong{font-size:24px;display:block;margin-top:8px}
+.hidden{display:none}
+.item{padding:12px 0;border-bottom:1px solid #eee}
+.item:last-child{border-bottom:0}
+.small{color:#72728a;font-size:13px}
+.tag{display:inline-block;background:#eeeaff;color:#5545cc;padding:5px 8px;border-radius:6px;font-size:12px}
+.option{display:block;width:100%;text-align:left;margin:7px 0;background:#f0edff;color:#292348}
+.option:hover{background:#ddd7ff}
+footer{text-align:center;padding:25px;color:#777;font-size:12px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}header{padding:16px;gap:10px}main{margin-top:18px}.card{padding:16px}}
+</style>
 </head>
 <body>
-  <h1>EduPilot 🎓</h1>
-  <p>Your Personal Student Assistant</p>
+<header>
+  <h2>✦ EduPilot</h2>
+  <span id="headerUser">Student Assistant</span>
+</header>
 
+<main>
+<section id="login" class="card">
+  <p class="tag">YOUR PERSONAL STUDY ASSISTANT</p>
+  <h1>Start your learning journey 🎓</h1>
+  <p class="small">Enter your details to create your student dashboard.</p>
+  <form id="profileForm">
+    <label>Student name</label>
+    <input id="name" placeholder="Your name" required>
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Your email" required>
+    <label>Education</label>
+    <select id="level">
+      <option>Intermediate</option>
+      <option>B.Tech</option>
+      <option>Other</option>
+    </select>
+    <label>Group / Branch</label>
+    <input id="branch" placeholder="MPC / CSE / ECE" required>
+    <label>Year</label>
+    <select id="year">
+      <option>1st Year</option>
+      <option>2nd Year</option>
+      <option>3rd Year</option>
+      <option>4th Year</option>
+    </select>
+    <label>Semester</label>
+    <select id="semester">
+      <option>Semester 1</option><option>Semester 2</option>
+      <option>Semester 3</option><option>Semester 4</option>
+      <option>Semester 5</option><option>Semester 6</option>
+      <option>Semester 7</option><option>Semester 8</option>
+    </select>
+    <label>Subjects (comma-separated)</label>
+    <textarea id="subjects" placeholder="Mathematics, Physics, Programming" required></textarea>
+    <label>Study hours per day</label>
+    <select id="hours">
+      <option value="1">1 hour</option>
+      <option value="2" selected>2 hours</option>
+      <option value="3">3 hours</option>
+      <option value="4">4 hours</option>
+      <option value="5">5 hours</option>
+    </select>
+    <button type="submit">Create My Dashboard →</button>
+  </form>
+</section>
+
+<section id="dashboard" class="hidden">
   <div class="card">
-    <h2>Student Details</h2>
-    <form id="studentForm">
-      <input id="name" placeholder="Enter your name" required>
-      <input id="email" type="email" placeholder="Enter email" required>
-
-      <select id="course">
-        <option>Intermediate</option>
-        <option>B.Tech</option>
-      </select>
-
-      <input id="branch" placeholder="Group / Branch" required>
-      <button type="submit">Open Dashboard</button>
-    </form>
-    <div id="result"></div>
+    <p class="tag">STUDENT DASHBOARD</p>
+    <h1>Welcome, <span id="welcome"></span>! 👋</h1>
+    <p id="summary" class="small"></p>
+    <button id="editProfile">Edit profile</button>
+    <button id="logout">Log out</button>
   </div>
 
-  <script>
-    document.getElementById("studentForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+  <div class="card">
+    <h2>Your progress</h2>
+    <div class="stats">
+      <div class="stat">Subjects<strong id="subjectCount">0</strong></div>
+      <div class="stat">Tasks done<strong id="doneCount">0</strong></div>
+      <div class="stat">Quiz average<strong id="score">0%</strong></div>
+    </div>
+  </div>
 
-      const name = document.getElementById("name").value;
-      const course = document.getElementById("course").value;
-      const branch = document.getElementById("branch").value;
+  <div class="grid">
+    <section class="card">
+      <h2>📅 Daily Study Plan</h2>
+      <p class="small">A suggested plan based on your subjects and study hours.</p>
+      <div id="plan"></div>
+      <button id="refreshPlan">Generate today's plan</button>
+    </section>
 
-      const result = document.getElementById("result");
-      result.replaceChildren();
+    <section class="card">
+      <h2>🔔 Exams & Assignments</h2>
+      <form id="deadlineForm">
+        <label>Title</label>
+        <input id="deadlineTitle" placeholder="e.g. Mathematics mid exam" required>
+        <label>Type</label>
+        <select id="deadlineType">
+          <option>Exam</option><option>Mid Exam</option>
+          <option>Assignment</option><option>Revision</option>
+        </select>
+        <label>Due date</label>
+        <input id="deadlineDate" type="date" required>
+        <button type="submit">Add reminder</button>
+      </form>
+      <div id="deadlines"></div>
+    </section>
 
-      const heading = document.createElement("h3");
-      heading.textContent = "Welcome, " + name + "!";
-      const details = document.createElement("p");
-      details.textContent = course + " - " + branch;
-      const message = document.createElement("p");
-      message.textContent = "Your dashboard is ready to build!";
+    <section class="card">
+      <h2>✅ Study Tasks</h2>
+      <form id="taskForm">
+        <input id="taskTitle" placeholder="Add a study task" required>
+        <button type="submit">Add task</button>
+      </form>
+      <div id="tasks"></div>
+    </section>
 
-      result.append(heading, details, message);
-    });
-  </script>
+    <section class="card">
+      <h2>🤖 Study Helper</h2>
+      <p class="small">Get a basic study suggestion from your profile.</p>
+      <input id="question" placeholder="What should I study today?">
+      <button id="ask">Ask Study Helper</button>
+      <p id="answer" aria-live="polite"></p>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>📝 Practice Quiz</h2>
+    <p id="quizQuestion"></p>
+    <div id="quizOptions"></div>
+    <p id="quizResult" aria-live="polite"></p>
+    <button id="nextQuiz">Next question</button>
+  </section>
+
+  <section class="card">
+    <h2>📚 My Curriculum</h2>
+    <p class="small">Subjects you entered in your profile.</p>
+    <div id="curriculum"></div>
+  </section>
+</section>
+<footer>EduPilot · Student Academic Assistant</footer>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+const KEY = "edupilot_student_v2";
+let data = null;
+let quizIndex = 0;
+let answered = false;
+
+const quiz = [
+ {q:"What is the derivative of x²?",o:["x","2x","x²","2"],a:1,e:"The derivative of x² is 2x."},
+ {q:"Which data structure follows FIFO?",o:["Stack","Queue","Tree","Graph"],a:1,e:"A queue follows First In, First Out."},
+ {q:"What is the SI unit of force?",o:["Joule","Newton","Watt","Pascal"],a:1,e:"Force is measured in newtons."},
+ {q:"What is the chemical formula of water?",o:["CO2","H2O","O2","NaCl"],a:1,e:"Water's chemical formula is H2O."}
+];
+
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function today(){let d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+
+$("profileForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const subjects=$("subjects").value.split(",").map(s=>s.trim()).filter(Boolean);
+ if(!subjects.length)return;
+ data={
+  profile:{
+   name:$("name").value.trim(),email:$("email").value.trim(),
+   level:$("level").value,branch:$("branch").value.trim(),
+   year:$("year").value,semester:$("semester").value,
+   subjects,hours:Number($("hours").value)
+  },
+  tasks:[],deadlines:[],scores:[]
+ };
+ subjects.forEach(s=>data.tasks.push({title:"Revise "+s+" notes",subject:s,done:false}));
+ data.tasks.push({title:"Complete 5 practice questions",subject:subjects[0],done:false});
+ save();showDashboard();
+});
+
+function showDashboard(){
+ $("login").classList.add("hidden");
+ $("dashboard").classList.remove("hidden");
+ $("headerUser").textContent=data.profile.name;
+ $("welcome").textContent=data.profile.name;
+ $("summary").textContent=data.profile.level+" · "+data.profile.branch+" · "+data.profile.year+" · "+data.profile.semester;
+ $("subjectCount").textContent=data.profile.subjects.length;
+ $("curriculum").innerHTML=data.profile.subjects.map(s=>'<p class="item">📘 '+safe(s)+'</p>').join("");
+ renderTasks();renderDeadlines();renderPlan();renderQuiz();
+}
+function renderTasks(){
+ const done=data.tasks.filter(t=>t.done).length;
+ $("doneCount").textContent=done;
+ $("tasks").innerHTML=data.tasks.map((t,i)=>
+ '<div class="item"><label><input type="checkbox" data-task="'+i+'" '+(t.done?"checked":"")+' style="width:auto;margin-right:8px">'+safe(t.title)+'</label><p class="small">'+safe(t.subject)+'</p></div>'
+ ).join("");
+ document.querySelectorAll("[data-task]").forEach(el=>el.addEventListener("change",()=>{
+  data.tasks[Number(el.dataset.task)].done=el.checked;save();renderTasks();
+ }));
+}
+$("taskForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ data.tasks.push({title:$("taskTitle").value.trim(),subject:"Personal",done:false});
+ $("taskTitle").value="";save();renderTasks();
+});
+function renderDeadlines(){
+ const list=[...data.deadlines].sort((a,b)=>a.date.localeCompare(b.date));
+ $("deadlines").innerHTML=list.length?list.map((d,i)=>
+ '<div class="item"><strong>'+safe(d.title)+'</strong><p class="small">'+safe(d.type)+' · '+safe(d.date)+'</p><button data-delete="'+i+'">Delete</button></div>'
+ ).join(""):'<p class="small">No reminders added yet.</p>';
+ document.querySelectorAll("[data-delete]").forEach(el=>el.addEventListener("click",()=>{
+  data.deadlines.splice(Number(el.dataset.delete),1);save();renderDeadlines();
+ }));
+}
+$("deadlineForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ data.deadlines.push({title:$("deadlineTitle").value.trim(),type:$("deadlineType").value,date:$("deadlineDate").value});
+ $("deadlineForm").reset();save();renderDeadlines();
+});
+function renderPlan(){
+ $("plan").innerHTML=data.profile.subjects.map((s,i)=>
+ '<div class="item"><strong>'+String(5+i).padStart(2,"0")+':00 — '+safe(s)+'</strong><p class="small">Study for '+Math.max(20,Math.floor(data.profile.hours*60/data.profile.subjects.length))+' minutes, then take a short break.</p></div>'
+ ).join("");
+}
+$("refreshPlan").addEventListener("click",renderPlan);
+$("ask").addEventListener("click",()=>{
+ const q=$("question").value.trim();
+ const subject=data.profile.subjects[0];
+ $("answer").textContent=q?
+ "Study suggestion: start with "+subject+", review your class notes, practise a few questions, and mark unfinished work in your task list. This is a basic built-in helper, not a connected AI model."
+ :"Enter a question first.";
+});
+function renderQuiz(){
+ const q=quiz[quizIndex%quiz.length];answered=false;
+ $("quizQuestion").textContent=q.q;$("quizResult").textContent="";
+ $("quizOptions").innerHTML=q.o.map((o,i)=>
+ '<button class="option" data-option="'+i+'">'+String.fromCharCode(65+i)+'. '+safe(o)+'</button>'
+ ).join("");
+ document.querySelectorAll("[data-option]").forEach(el=>el.addEventListener("click",()=>{
+  if(answered)return;answered=true;
+  const correct=Number(el.dataset.option)===q.a;
+  data.scores.push(correct?100:0);
+  $("score").textContent=Math.round(data.scores.reduce((a,b)=>a+b,0)/data.scores.length)+"%";
+  save();
+  $("quizResult").textContent=(correct?"Correct! ":"Not quite. ")+q.e;
+  document.querySelectorAll("[data-option]").forEach(b=>b.disabled=true);
+ }));
+}
+$("nextQuiz").addEventListener("click",()=>{quizIndex++;renderQuiz();});
+$("logout").addEventListener("click",()=>{
+ $("dashboard").classList.add("hidden");$("login").classList.remove("hidden");
+});
+$("editProfile").addEventListener("click",()=>{
+ $("dashboard").classList.add("hidden");$("login").classList.remove("hidden");
+ $("name").value=data.profile.name;$("email").value=data.profile.email;
+ $("level").value=data.profile.level;$("branch").value=data.profile.branch;
+ $("year").value=data.profile.year;$("semester").value=data.profile.semester;
+ $("subjects").value=data.profile.subjects.join(", ");$("hours").value=data.profile.hours;
+});
+try{
+ const saved=localStorage.getItem(KEY);
+ if(saved){const parsed=JSON.parse(saved);if(parsed&&parsed.profile&&Array.isArray(parsed.tasks)&&Array.isArray(parsed.deadlines)&&Array.isArray(parsed.scores)){data=parsed;showDashboard();}}
+}catch(e){}
+</script>
 </body>
 </html>
